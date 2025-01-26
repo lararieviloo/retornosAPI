@@ -3,6 +3,7 @@ package com.example.retornosAPI.services;
 import com.example.retornosAPI.models.Product;
 import com.example.retornosAPI.models.ProductEntity;
 import com.example.retornosAPI.repositories.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(@Valid Product product) {
         ProductEntity entity = new ProductEntity(null, product.name(), product.price(), product.stockQuantity(), product.category());
         ProductEntity savedEntity = repository.save(entity);
         return new Product(savedEntity.getId(), savedEntity.getName(), savedEntity.getPrice(), savedEntity.getStockQuantity(), savedEntity.getCategory());
@@ -41,7 +42,7 @@ public class ProductService {
     }
 
     // Atualizar um produto existente
-    public Product updateProduct(Long id, Product updatedProduct) {
+    public Product updateProduct(@Valid Long id, Product updatedProduct) {
         // Verificar se o produto existe
         ProductEntity existingEntity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with ID " + id + " not found"));
@@ -49,6 +50,8 @@ public class ProductService {
         // Atualizar os dados do produto
         existingEntity.setName(updatedProduct.name());
         existingEntity.setPrice(updatedProduct.price());
+        existingEntity.setStockQuantity(updatedProduct.stockQuantity());
+        existingEntity.setCategory(updatedProduct.category());
 
         // Salvar as alterações no banco de dados
         ProductEntity savedEntity = repository.save(existingEntity);
