@@ -1,36 +1,30 @@
-package com.example.retornosAPI.models;
+package com.example.retornosAPI.dtos;
 
+import com.example.retornosAPI.models.Category;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
-@Entity
-public class ProductEntity {
+public class ProductRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotEmpty(message = "O nome não pode ser vazio.")
+    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres.")
     private String name;
+
+    @DecimalMin(value = "0.01", message = "O valor deve ser maior que 0!")
     private Double price;
+
+    @NotNull(message = "A quantidade não pode ser nula.")
+    @Min(value = 0, message = "A quantidade em estoque deve ser maior ou igual a 0.")
     private int stockQuantity;
+
+    @Enumerated(EnumType.STRING)
     private Category category;
 
-    public ProductEntity() {
-    }
-
-    public ProductEntity(Long id, String name, Double price, int stockQuantity, Category category) {
-        this.id = id;
+    public ProductRequestDTO(Long id, String name, Double price, int stockQuantity, Category category) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.category = category;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
